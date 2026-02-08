@@ -22,7 +22,7 @@ def example_shakespeare():
     You are all resolved rather to die than to famish?
 
     All:
-    Resolved. resolved.
+    Resolved. Resolved.
 
     First Citizen:
     First, you know Caius Marcius is chief enemy to the people.

@@ -114,11 +114,11 @@ def train(text,
     optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
     
     # Training loop
-    for iter in range(max_iters):
+    for step in range(max_iters):
         # Every eval_interval, evaluate the loss on train and val sets
-        if iter % eval_interval == 0 or iter == max_iters - 1:
+        if step % eval_interval == 0 or step == max_iters - 1:
             losses = estimate_loss(model, train_data, val_data, block_size, batch_size, eval_iters, device)
-            print(f"Step {iter}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
+            print(f"Step {step}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
         
         # Sample a batch of data
         xb, yb = get_batch(train_data, block_size, batch_size, device)
