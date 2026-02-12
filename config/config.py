@@ -1,20 +1,20 @@
 class Config:
-    # Hyperparameters (reduced for testing without GPU)
-    batch_size = 4
-    block_size = 32
-    max_iters = 2
-    eval_interval = 1
-    eval_iters = 1
+    # Hyperparameters
+    batch_size = 64
+    block_size = 256
+    max_iters = 5000
+    eval_interval = 500
+    eval_iters = 50
     learning_rate = 3e-4
-    n_embd = 64
-    n_head = 2
-    n_layer = 2
+    n_embd = 256
+    n_head = 6
+    n_layer = 6
     dropout = 0.2
     seed = 1337
     
     # Paths
-    input_path = "/home/neo/Desktop/GITHUB MYZ21/GPT/data/data.txt"
-    model_save_path = "/home/neo/Desktop/GITHUB MYZ21/GPT/outputs/model_{}.pth"
+    input_path = "/content/drive/MyDrive/nutuk.txt"
+    model_save_path = "/content/drive/MyDrive/model_{}.pth"
     
-    # Device - force CPU for testing
-    device = 'cpu'
+    # Device
+    device = 'cuda' if __import__('torch').cuda.is_available() else 'cpu'
