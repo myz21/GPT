@@ -3,7 +3,7 @@ import os
 from config.config import Config
 from src.data import DataProcessor
 from src.model import GPTLanguageModel
-from src.training import Trainer
+from src.train import Trainer
 
 def main():
     torch.manual_seed(Config.seed)
