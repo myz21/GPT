@@ -1,13 +1,13 @@
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
+import sys
+import os
 
-try:
-    from config.config import Config
-except ImportError:
-    import sys
-    sys.path.insert(0, '.')
-    from config.config import Config
+# Add parent directory to path for config import
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from config.config import Config
 
 
 class Head(nn.Module):

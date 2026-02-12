@@ -1,9 +1,14 @@
 import torch
 import os
+import sys
+
+# Add parent directory to path so imports work correctly
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from config.config import Config
 from src.data import DataProcessor
 from src.model import GPTLanguageModel
-from src.training import Trainer
+from src.train import Trainer
 
 def main():
     torch.manual_seed(Config.seed)
