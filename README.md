@@ -6,48 +6,85 @@ A character-level Decoder-only Transformer (GPT architecture) from scratch. This
 
 ```text
 GPT/
-├── data/                  # Training data (nutuk.txt - not in repo)
-├── notebooks/             
-│   └── GPT_DEV.ipynb     # Main development notebook (Google Colab)
-├── outputs/               # Model checkpoints (generated during training)
-├── src/                   # Source code (to be modularized from notebook)
+├── config/
+│   └── config.py          # Hyperparameters and configuration
+├── data/
+│   └── data.txt           # Training data
+├── notebooks/
+│   ├── GPT_DEV.ipynb      # Development notebook
+│   └── initial.ipynb      # Initial exploration
+├── outputs/
+│   └── test_model.pth     # Saved model checkpoints
+├── src/
+│   ├── __init__.py
+│   ├── main.py            # Main entry point
+│   ├── model.py           # GPT transformer architecture
+│   ├── data.py            # DataProcessor class
+│   └── train.py           # Trainer class
+├── pyproject.toml         # Project configuration
 └── README.md
 ```
 
-> **Current Status:** Most of the implementation is in `GPT_DEV.ipynb`. The `src/` directory is planned for refactoring the notebook into reusable modules.
+> **Status:** Modular architecture implemented! Code is organized into reusable modules with clear separation of concerns.
 
 ## 🛠️ Setup & Usage
 
-### Running on Google Colab (Recommended)
-
-1. Upload `nutuk.txt` to your Google Drive
-2. Open `notebooks/GPT_DEV.ipynb` in Colab
-3. Mount your Drive and adjust the file path:
-   ```python
-   with open("/content/drive/MyDrive/nutuk.txt") as f:
-       text = f.read()
-   ```
-4. Run all cells to train the model
-
-### Local Setup
+### Quick Start
 
 ```bash
 git clone https://github.com/myz21/GPT.git
 cd GPT
-pip install torch numpy matplotlib tqdm
+
+# Option 1: Using pip (standard)
+pip install -e .
+
+# Option 2: Using uv (faster)
+uv venv .venv
+source .venv/bin/activate  # or .venv\Scripts\activate on Windows
+uv sync
 ```
+
+### Run Training
+
+```bash
+python src/main.py
+```
+
+### Module Overview
+
+| Module | Purpose |
+|--------|---------|
+| `config/config.py` | Hyperparameters (batch_size, block_size, learning_rate, etc.) |
+| `src/data.py` | `DataProcessor` - loads text, tokenizes, creates batches |
+| `src/model.py` | GPT architecture - `Head`, `MultiHeadAttention`, `Block`, `GPTLanguageModel` |
+| `src/train.py` | `Trainer` class - handles training loop and loss estimation |
+| `src/main.py` | Main entry point - orchestrates data loading, model training, generation |
+
+### Google Colab (Original Method)
+
+1. Upload `nutuk.txt` to your Google Drive
+2. Open `notebooks/GPT_DEV.ipynb` in Colab
+3. Adjust file paths and run cells
 
 ## 📊 Model Specifications
 
-**Current Implementation:**
-* **Dataset:** Nutuk by M.K. Atatürk (1,577,732 characters)
-* **Tokenization:** Character-level (Turkish alphabet)
+**Production Configuration:**
 * **Context Window:** 256 characters
 * **Embedding Dimension:** 256
 * **Attention Heads:** 6
 * **Transformer Blocks:** 6
+* **Batch Size:** 64
 * **Parameters:** ~4.8M
 * **Dropout:** 0.2
+
+**Test/Development Configuration:**
+* **Context Window:** 32 characters
+* **Embedding Dimension:** 64
+* **Attention Heads:** 2
+* **Transformer Blocks:** 2
+* **Batch Size:** 4
+* **Parameters:** ~107K
+* **Device:** CPU (for testing without GPU)
 
 ## 🚀 Roadmap
 
@@ -56,13 +93,18 @@ pip install torch numpy matplotlib tqdm
 - [x] Character-level tokenization for Turkish
 - [x] Training loop with AdamW optimizer
 - [x] Text generation with temperature sampling
+- [x] **Modularize codebase** ✨
+  - [x] `src/model.py` - Transformer architecture
+  - [x] `src/data.py` - Dataset and batching
+  - [x] `src/train.py` - Training class
+  - [x] `src/main.py` - Main entry point
+  - [x] `config/config.py` - Centralized configuration
+  - [x] `pyproject.toml` - Project metadata
 
 ### 🔨 In Progress
-- [ ] **Modularize codebase:** Move notebook code to `src/` directory
-  - `src/model.py` - Transformer architecture
-  - `src/data_loader.py` - Dataset and batching
-  - `src/train.py` - Training script
-  - `src/generate.py` - Inference utilities
+- [ ] Hyperparameter tuning for better convergence
+- [ ] Add validation metrics and monitoring
+- [ ] Implement learning rate scheduler
 
 ### 🎓 Learning Goals
 - [ ] Implement learning rate scheduler (cosine decay with warmup)
