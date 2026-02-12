@@ -13,8 +13,8 @@ class Config:
     seed = 1337
     
     # Paths
-    input_path = "/content/drive/MyDrive/nutuk.txt"
-    model_save_path = "/content/drive/MyDrive/model_{}.pth"
+    input_path = "./data/data.txt"
+    model_save_path = "./outputs/model_{}.pth"
     
     # Device
     device = 'cuda' if __import__('torch').cuda.is_available() else 'cpu'
