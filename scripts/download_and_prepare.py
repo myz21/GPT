@@ -31,8 +31,13 @@ def download_and_prepare():
             if i >= Config.havadis_max_articles:
                 break
 
-            title = example.get("title", "").strip()
-            text = example.get("text", "").strip()
+            raw_text = example.get("text", "").strip()
+            if not raw_text or len(raw_text) < 50:
+                continue
+
+            lines = raw_text.split("\n", 1)
+            title = lines[0].strip()
+            text = lines[1].strip() if len(lines) > 1 else ""
 
             if not title or not text or len(text) < 50:
                 continue
