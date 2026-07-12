@@ -3,9 +3,9 @@
 shutdown_pod() {
     echo ""
     echo "=== RUN FINISHED (exit code: $?) ==="
-    echo "Shutting down RunPod in 10 seconds..."
-    sleep 10
-    sudo shutdown -h now
+    echo "Killing RunPod in 5 seconds..."
+    sleep 5
+    kill -9 1
 }
 
 trap shutdown_pod EXIT
