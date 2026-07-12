@@ -31,21 +31,18 @@ def download_and_prepare():
             if i >= Config.havadis_max_articles:
                 break
 
+            url = example.get("url", "")
             raw_text = example.get("text", "").strip()
-            if not raw_text or len(raw_text) < 50:
+
+            if not raw_text or len(raw_text) < 50 or not url:
                 continue
 
-            lines = raw_text.split("\n", 1)
-            title = lines[0].strip()
-            text = lines[1].strip() if len(lines) > 1 else ""
+            slug = url.rstrip("/").split("/")[-1]
+            title = slug.replace("-", " ")
 
-            if not title or not text or len(text) < 50:
-                continue
+            text_clean = raw_text.replace("\r", "")
 
-            title_clean = title.replace("\n", " ").replace("\r", " ")
-            text_clean = text.replace("\r", "")
-
-            f.write(f"Başlık: {title_clean}\n")
+            f.write(f"Başlık: {title}\n")
             f.write(f"İçerik: {text_clean}\n")
             f.write("HABER SONU\n\n")
             count += 1
