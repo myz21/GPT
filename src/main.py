@@ -37,15 +37,12 @@ def generate_samples(model, data_processor, prompt="", max_tokens=300, temperatu
     return data_processor.decode(context[0].tolist())
 
 def print_results(model_name, val_loss, params, gen_text):
-    print(f"\n{'='*60}")
     print(f"  {model_name}")
-    print(f"{'='*60}")
     print(f"  Parameters: {params/1e6:.2f}M")
     print(f"  Val Loss:   {val_loss:.4f}")
     print(f"  Perplexity: {math.exp(val_loss):.2f}")
     print("  Generated Text:")
     print(f"  {gen_text[:2000]}")
-    print(f"{'='*60}\n")
 
 def main():
     torch.manual_seed(Config.seed)
@@ -57,15 +54,11 @@ def main():
 
     data_processor = DataProcessor(Config.input_path, val_split=Config.havadis_val_split)
 
-    print(f"\n{'-'*60}")
     print("BASELINE 1: Random (uniform prediction)")
-    print(f"{'-'*60}")
     random_loss = math.log(data_processor.vocab_size)
     print(f"  Random loss: {random_loss:.4f} (ppl {math.exp(random_loss):.2f})")
 
-    print(f"\n{'-'*60}")
     print("BASELINE 2: Bigram Model")
-    print(f"{'-'*60}")
     bigram = BigramModel(data_processor.vocab_size).to(Config.device)
     bigram_params = sum(p.numel() for p in bigram.parameters())
     trainer = Trainer(bigram, data_processor, model_name="bigram")
@@ -74,9 +67,7 @@ def main():
     bigram_gen = generate_samples(bigram, data_processor, prompt="Başlık: ", max_tokens=200)
     print_results("Bigram Baseline", bigram_val_loss, bigram_params, bigram_gen)
 
-    print(f"\n{'-'*60}")
     print(f"GPT Model ({Config.mode})")
-    print(f"{'-'*60}")
     model = GPTLanguageModel(data_processor.vocab_size).to(Config.device)
     gpt_params = sum(p.numel() for p in model.parameters())
     print(f"  {gpt_params/1e6:.1f}M parameters")
@@ -103,25 +94,19 @@ def main():
 
     print_results(f"GPT-{Config.mode.capitalize()}", gpt_loss.item(), gpt_params, gpt_gen)
 
-    print(f"\n{'='*60}")
     print("  FINAL COMPARISON TABLE")
-    print(f"{'='*60}")
     print(f"  {'Model':<20} {'Loss':<10} {'PPL':<10} {'Params':<10}")
     print(f"  {'-'*50}")
     print(f"  {'Random':<20} {random_loss:<10.4f} {math.exp(random_loss):<10.2f} {'0':<10}")
     print(f"  {'Bigram':<20} {bigram_val_loss:<10.4f} {math.exp(bigram_val_loss):<10.2f} {bigram_params/1e6:<10.2f}M")
     print(f"  {'GPT-'+Config.mode.capitalize():<20} {gpt_loss.item():<10.4f} {math.exp(gpt_loss.item()):<10.2f} {gpt_params/1e6:<10.2f}M")
-    print(f"{'='*60}")
 
     comparison = f"""
-FINAL RESULTS:
-=============
 Dataset: {Config.dataset} ({Config.havadis_max_articles} articles)
 Mode:    {Config.mode}
 Device:  {Config.device}
 
 {'Model':<20} {'Val Loss':<10} {'Perplexity':<12} {'Params':<10}
-{'-'*52}
 {'Random':<20} {random_loss:<10.4f} {math.exp(random_loss):<12.2f} {'0':<10}
 {'Bigram':<20} {bigram_val_loss:<10.4f} {math.exp(bigram_val_loss):<12.2f} {bigram_params/1e6:<10.2f}M
 {'GPT-'+Config.mode.capitalize():<20} {gpt_loss.item():<10.4f} {math.exp(gpt_loss.item()):<12.2f} {gpt_params/1e6:<10.2f}M
