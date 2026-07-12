@@ -2,31 +2,30 @@ import torch
 import sys
 import os
 
-# Add parent directory to path for config import
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config.config import Config
 
 class DataProcessor:
-    def __init__(self, text_path):
-        with open(text_path) as f:
+    def __init__(self, text_path, val_split=0.1):
+        with open(text_path, encoding="utf-8") as f:
             self.text = f.read()
         
-        # Character encoding
         self.chars = sorted(list(set(self.text)))
         self.vocab_size = len(self.chars)
         self.stoi = {ch: i for i, ch in enumerate(self.chars)}
         self.itos = {i: ch for i, ch in enumerate(self.chars)}
         
-        # Encode/Decode functions
         self.encode = lambda s: [self.stoi[c] for c in s]
         self.decode = lambda l: ''.join([self.itos[i] for i in l])
         
-        # Train-val split
         data = torch.tensor(self.encode(self.text), dtype=torch.long)
-        n = int(0.9 * len(data))
+        n = int((1 - val_split) * len(data))
         self.train_data = data[:n]
         self.val_data = data[n:]
+        
+        print(f"Data: {len(data):,} chars, vocab: {self.vocab_size}")
+        print(f"Train: {len(self.train_data):,}, Val: {len(self.val_data):,}")
     
     def get_batch(self, split):
         data = self.train_data if split == 'train' else self.val_data

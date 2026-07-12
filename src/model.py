@@ -13,7 +13,7 @@ from config.config import Config
 class Head(nn.Module):
     def __init__(self, head_size):
         super().__init__()
-        self.key = nn.Linear(Config.n_embd, head_size, bias=False)
+        self.key = nn.Linear(Config.n_embd, head_size, bias=False) #initialize the k, q and v layers radomly with no bias
         self.query = nn.Linear(Config.n_embd, head_size, bias=False)
         self.value = nn.Linear(Config.n_embd, head_size, bias=False)
         self.register_buffer('tril', torch.tril(torch.ones(Config.block_size, Config.block_size)))
@@ -23,9 +23,9 @@ class Head(nn.Module):
         B, T, C = x.shape
         k = self.key(x)
         q = self.query(x)
-        wei = q @ k.transpose(-2, -1) * k.shape[-1]**-0.5
+        wei = q @ k.transpose(-2, -1) * k.shape[-1]**-0.5 #compute attention weights
         wei = wei.masked_fill(self.tril[:T, :T] == 0, float('-inf'))
-        wei = F.softmax(wei, dim=-1)
+        wei = F.softmax(wei, dim=-1) #normalize the attention weights
         wei = self.dropout(wei)
         v = self.value(x)
         out = wei @ v
@@ -34,12 +34,12 @@ class Head(nn.Module):
 class MultiHeadAttention(nn.Module):
     def __init__(self, num_heads, head_size):
         super().__init__()
-        self.heads = nn.ModuleList([Head(head_size) for _ in range(num_heads)])
+        self.heads = nn.ModuleList([Head(head_size) for _ in range(num_heads)]) #create multiple heads
         self.proj = nn.Linear(head_size * num_heads, Config.n_embd)
         self.dropout = nn.Dropout(Config.dropout)
 
     def forward(self, x):
-        out = torch.cat([h(x) for h in self.heads], dim=-1)
+        out = torch.cat([h(x) for h in self.heads], dim=-1) #concatenate outputs from all heads
         out = self.dropout(self.proj(out))
         return out
 
