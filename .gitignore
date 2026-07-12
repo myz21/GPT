@@ -3,6 +3,7 @@ __pycache__/
 *.pyo
 .env
 .venv/
+wandb/
 outputs/*.pth
 outputs/*.txt
 data/havadis_raw.txt
