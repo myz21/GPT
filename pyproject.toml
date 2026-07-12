@@ -14,7 +14,7 @@ authors = [
 dependencies = [
     "torch",
     "matplotlib",
-    "numpy"
+    "numpy",
 ]
 
 [tool.setuptools.packages.find]
