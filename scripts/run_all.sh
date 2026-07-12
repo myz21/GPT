@@ -2,8 +2,8 @@
 set -e
 
 echo "========================================"
-echo "  GPT-from-Scratch + Havadis Türkçe Haber"
-echo "  RunPod RTX A6000 - ~$2 toplam maliyet"
+echo "  GPT-from-Scratch + Havadis Turkish News"
+echo "  RunPod RTX A6000 - ~$2 total cost"
 echo "========================================"
 echo ""
 
@@ -32,7 +32,7 @@ ls -la outputs/
 cat outputs/results.txt
 
 echo ""
-echo "============= BAŞVURU DOSYALARI HAZIR ============="
+echo "============= APPLICATION FILES READY ============="
 echo "  - Model checkpoints: outputs/model_*.pth"
 echo "  - Bigram baseline:   outputs/bigram_baseline.pth"
 echo "  - Results:           outputs/results.txt"
