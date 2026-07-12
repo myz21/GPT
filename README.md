@@ -26,6 +26,11 @@ GPT/
 │   ├── bigram.py          # Bigram baseline model for comparison
 │   ├── data.py            # DataProcessor class
 │   └── train.py           # Trainer with LR scheduler, gradient clipping, perplexity
+├── tests/
+│   ├── conftest.py        # Shared fixtures and config patching
+│   ├── test_config.py     # Config unit tests
+│   ├── test_data.py       # DataProcessor unit tests
+│   └── test_integration.py # End-to-end pipeline tests
 ├── pyproject.toml
 └── README.md
 ```
@@ -85,6 +90,32 @@ Set mode in `config/config.py`: `mode = "medium"`
 - Top-k / temperature sampling for generation
 - Bigram baseline for comparison
 - Attention pattern visualization
+
+## Testing
+
+```bash
+# Install test dependency
+pip install pytest
+
+# Run all tests (unit + integration)
+pytest tests/ -v
+
+# Run only unit tests
+pytest tests/test_config.py tests/test_data.py -v
+
+# Run only integration tests
+pytest tests/test_integration.py -v
+```
+
+### Test Coverage
+
+| File | Type | What it tests |
+|------|------|---------------|
+| `test_config.py` | Unit | Config modes, device, paths, hyperparameters |
+| `test_data.py` | Unit | DataProcessor init, encode/decode, batching, edge cases |
+| `test_integration.py` | Integration | Full pipeline: DataProcessor → Model → Train → Generate → Checkpoint |
+
+Every pull request is also automatically tested via GitHub Actions.
 
 ## About
 
