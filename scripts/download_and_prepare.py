@@ -14,7 +14,7 @@ def download_and_prepare():
         print(f"Processed file already exists: {Config.input_path}")
         return
 
-    print(f"Downloading Havadis dataset (up to {Config.havadis_max_articles:,} articles)...")
+    print(f"Downloading Havadis dataset (up to {Config.havadis_max_articles:} articles)...")
 
     try:
         from datasets import load_dataset

@@ -6,13 +6,13 @@ class Config:
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     # === Dataset ===
-    dataset = "havadis"  # havaids, data.txt, custom
-    havaids_raw_path = "./data/havadis_raw.txt"
+    dataset = "havadis"  # havadis, data.txt, custom
+    havadis_raw_path = "./data/havadis_raw.txt"
     input_path = "./data/havadis_processed.txt"
 
     # === Havadis Processing ===
-    havaids_max_articles = 100000  # use 100K for 4hr training (744K total)
-    havaids_val_split = 0.01       # 1% validation
+    havadis_max_articles = 100000  # use 100K for 4hr training (744K total)
+    havadis_val_split = 0.01       # 1% validation
 
     # === Model Architecture (RTX A6000 48GB) ===
     mode = "medium"  # tiny | small | medium | large

@@ -10,7 +10,7 @@ GPT/
 │   └── config.py          # Hyperparameters (4 modes: tiny/small/medium/large)
 ├── data/
 │   ├── data.txt           # Test dataset
-│   └── havaids_*.txt      # Havadis Turkish news corpus (automatically downloaded)
+│   └── havadis_*.txt      # Havadis Turkish news corpus (automatically downloaded)
 ├── scripts/
 │   ├── download_and_prepare.py  # Download Havadis from HuggingFace
 │   └── run_all.sh               # Single command for full pipeline
