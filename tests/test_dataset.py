@@ -4,17 +4,30 @@ import pytest
 
 from config.config import Config
 
-DATASET_EXISTS = os.path.exists(Config.input_path)
+FULL_EXISTS = os.path.exists(Config.input_path)
+SMALL_EXISTS = os.path.exists(Config.havadis_small_path)
+ANY_EXISTS = FULL_EXISTS or SMALL_EXISTS
 
 pytestmark = pytest.mark.skipif(
-    not DATASET_EXISTS,
-    reason="Havadis dataset not downloaded. Run: python scripts/download_and_prepare.py",
+    not ANY_EXISTS,
+    reason="No dataset found. Run: python scripts/download_and_prepare.py (--small)",
 )
 
 
+def _get_dataset_path():
+    if FULL_EXISTS:
+        return Config.input_path
+    return Config.havadis_small_path
+
+
 @pytest.fixture
-def dataset_text():
-    with open(Config.input_path, encoding="utf-8") as f:
+def dataset_path():
+    return _get_dataset_path()
+
+
+@pytest.fixture
+def dataset_text(dataset_path):
+    with open(dataset_path, encoding="utf-8") as f:
         return f.read()
 
 
@@ -24,15 +37,15 @@ def articles(dataset_text):
 
 
 class TestDatasetExists:
-    def test_file_exists(self):
-        assert os.path.exists(Config.input_path)
+    def test_file_exists(self, dataset_path):
+        assert os.path.exists(dataset_path)
 
     def test_file_not_empty(self, dataset_text):
         assert len(dataset_text) > 0
 
-    def test_file_size_minimum(self):
-        size_mb = os.path.getsize(Config.input_path) / 1e6
-        assert size_mb >= 10, f"Dataset too small: {size_mb:.1f} MB (expected >= 10 MB)"
+    def test_file_size_minimum(self, dataset_path):
+        size_mb = os.path.getsize(dataset_path) / 1e6
+        assert size_mb >= 1, f"Dataset too small: {size_mb:.1f} MB (expected >= 1 MB)"
 
 
 class TestDatasetFormat:
@@ -66,7 +79,7 @@ class TestDatasetFormat:
 
     def test_minimum_article_count(self, articles):
         count = len([a for a in articles if a.strip()])
-        assert count >= 1000, f"Too few articles: {count} (expected >= 1000)"
+        assert count >= 100, f"Too few articles: {count} (expected >= 100)"
 
 
 class TestDatasetEncoding:

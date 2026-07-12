@@ -8,10 +8,12 @@ class Config:
     # === Dataset ===
     dataset = "havadis"  # havadis, data.txt, custom
     havadis_raw_path = "./data/havadis_raw.txt"
+    havadis_small_path = "./data/havadis_small.txt"
     input_path = "./data/havadis_processed.txt"
 
     # === Havadis Processing ===
-    havadis_max_articles = 100000  # use 100K for 4hr training (744K total)
+    havadis_max_articles = 100000  # full dataset
+    havadis_small_max_articles = 10000  # quick test (MovieGPT-style)
     havadis_val_split = 0.01       # 1% validation
 
     # === Model Architecture (RTX A6000 48GB) ===

@@ -1,3 +1,4 @@
+import argparse
 import os
 import sys
 
@@ -6,15 +7,19 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config.config import Config
 
 
-def download_and_prepare():
+def download_and_prepare(small=False):
     os.makedirs("data", exist_ok=True)
     os.makedirs("outputs", exist_ok=True)
 
-    if os.path.exists(Config.input_path):
-        print(f"Processed file already exists: {Config.input_path}")
+    max_articles = Config.havadis_small_max_articles if small else Config.havadis_max_articles
+    raw_path = Config.havadis_small_path if small else Config.havadis_raw_path
+    label = "small (quick test)" if small else "full"
+
+    if os.path.exists(raw_path):
+        print(f"{label} dataset already exists: {raw_path}")
         return
 
-    print(f"Downloading Havadis dataset (up to {Config.havadis_max_articles:} articles)...")
+    print(f"Downloading Havadis dataset ({label}, up to {max_articles:,} articles)...")
 
     try:
         from datasets import load_dataset
@@ -26,9 +31,9 @@ def download_and_prepare():
     ds = load_dataset("turkish-nlp-suite/Havadis", split="train", streaming=True)
 
     count = 0
-    with open(Config.havadis_raw_path, "w", encoding="utf-8") as f:
+    with open(raw_path, "w", encoding="utf-8") as f:
         for i, example in enumerate(ds):
-            if i >= Config.havadis_max_articles:
+            if i >= max_articles:
                 break
 
             url = example.get("url", "")
@@ -50,15 +55,20 @@ def download_and_prepare():
             if count % 10000 == 0:
                 print(f"  {count} articles processed...")
 
-    print(f"\nDownloaded {count} articles to {Config.havadis_raw_path}")
-    print(f"File size: {os.path.getsize(Config.havadis_raw_path) / 1e6:.1f} MB")
+    print(f"\nDownloaded {count} articles to {raw_path}")
+    print(f"File size: {os.path.getsize(raw_path) / 1e6:.1f} MB")
 
-    print(f"\nCopying to {Config.input_path}...")
-    with open(Config.havadis_raw_path, "r", encoding="utf-8") as src:
-        with open(Config.input_path, "w", encoding="utf-8") as dst:
-            dst.write(src.read())
+    if not small:
+        print(f"\nCopying to {Config.input_path}...")
+        with open(raw_path, "r", encoding="utf-8") as src:
+            with open(Config.input_path, "w", encoding="utf-8") as dst:
+                dst.write(src.read())
 
     print("Done! Ready for training.")
 
+
 if __name__ == "__main__":
-    download_and_prepare()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--small", action="store_true", help="Download 10K articles for quick testing")
+    args = parser.parse_args()
+    download_and_prepare(small=args.small)
