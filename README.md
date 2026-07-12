@@ -48,7 +48,7 @@ python src/main.py
 
 ## Model Modes
 
-| Mode | Parameters | VRAM | Training Time (RTX A6000) |
+| Mode | Parameters | VRAM | Training Time |
 |------|-----------|------|--------------------------|
 | tiny | ~107K | ~0.5 GB | ~5 min |
 | small | ~1.2M | ~1 GB | ~20 min |
@@ -73,8 +73,6 @@ Set mode in `config/config.py`: `mode = "medium"`
 - **Size:** 744K news articles, 2.88 GB, 315M words (uses 100K by default for fast training)
 - **Sources:** CNN Türk, Hürriyet, Milliyet, Sözcü, Sabah, NTV, Star, Posta
 - **Format:** `Başlık: <title>\nİçerik: <body>\nHABER SONU\n`
-
-RunPod (RTX A6000) training: ~1.5 hours → val loss ~1.5
 
 ## Features
 

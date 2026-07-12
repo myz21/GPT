@@ -2,7 +2,6 @@
 set -e
 
 echo "GPT-from-Scratch + Havadis Turkish News"
-echo "RunPod RTX A6000 - ~$2 total cost"
 echo ""
 
 # 1. Install dependencies
