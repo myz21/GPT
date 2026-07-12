@@ -1,3 +1,5 @@
+import os
+
 import torch
 
 
@@ -49,6 +51,11 @@ class Config:
     gen_max_tokens = 500
     gen_temperature = 0.8
     gen_top_k = 50
+
+    # === W&B Logging ===
+    wandb_enabled = os.environ.get("WANDB_ENABLED", "false").lower() == "true"
+    wandb_entity = os.environ.get("WANDB_ENTITY", "")
+    wandb_project = os.environ.get("WANDB_PROJECT", "GPT-Scratch")
 
     # === Paths ===
     model_save_path = "./outputs/model_{}_{}.pth"

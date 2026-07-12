@@ -8,6 +8,11 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config.config import Config
 
+try:
+    import wandb
+except ImportError:
+    wandb = None
+
 
 class Trainer:
     def __init__(self, model, data_processor, model_name="gpt"):
@@ -64,6 +69,16 @@ class Trainer:
                       f"val loss {losses['val']:.4f} (ppl {val_ppl:.2f}) | "
                       f"lr {lr:.2e} | params {params/1e6:.1f}M")
 
+                if Config.wandb_enabled and wandb is not None and wandb.run is not None:
+                    wandb.log({
+                        "train/loss": losses['train'],
+                        "val/loss": losses['val'],
+                        "train/perplexity": train_ppl,
+                        "val/perplexity": val_ppl,
+                        "lr": lr,
+                        "step": iter,
+                    })
+
                 save_path = Config.model_save_path.format(self.model_name, iter)
                 torch.save({
                     'model_state_dict': self.model.state_dict(),
@@ -102,6 +117,12 @@ class Trainer:
                 print(f"  [bigram] step {iter:5d}/2000 | val loss {val_loss.item():.4f} (ppl {ppl:.2f})")
                 if val_loss < best_loss:
                     best_loss = val_loss
+                if Config.wandb_enabled and wandb is not None and wandb.run is not None:
+                    wandb.log({
+                        "bigram/val_loss": val_loss.item(),
+                        "bigram/perplexity": ppl,
+                        "bigram/step": iter,
+                    })
 
         save_path = Config.bigram_save_path
         torch.save({

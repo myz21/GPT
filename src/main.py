@@ -6,6 +6,9 @@ import torch
 
 torch.set_num_threads(1)
 
+from dotenv import load_dotenv
+load_dotenv()
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config.config import Config
@@ -13,6 +16,11 @@ from src.bigram import BigramModel
 from src.data import DataProcessor
 from src.model import GPTLanguageModel
 from src.train import Trainer
+
+try:
+    import wandb
+except ImportError:
+    wandb = None
 
 
 def generate_samples(model, data_processor, prompt="", max_tokens=300, temperature=0.8, top_k=50):
@@ -48,6 +56,26 @@ def print_results(model_name, val_loss, params, gen_text):
 
 def main():
     torch.manual_seed(Config.seed)
+
+    if Config.wandb_enabled and wandb is not None:
+        wandb.init(
+            entity=Config.wandb_entity,
+            project=Config.wandb_project,
+            config={
+                "mode": Config.mode,
+                "dataset": Config.dataset,
+                "max_articles": Config.havadis_max_articles,
+                "learning_rate": Config.learning_rate,
+                "batch_size": Config.batch_size,
+                "block_size": Config.block_size,
+                "n_embd": Config.n_embd,
+                "n_head": Config.n_head,
+                "n_layer": Config.n_layer,
+                "max_iters": Config.max_iters,
+                "dropout": Config.dropout,
+                "device": Config.device,
+            },
+        )
 
     print(f"Device: {Config.device}")
     print(f"Mode: {Config.mode} ({Config.MODEL_CONFIGS[Config.mode]['desc']})")
@@ -116,6 +144,9 @@ Device:  {Config.device}
     with open(Config.results_path, "w") as f:
         f.write(comparison)
     print(f"\nResults saved to {Config.results_path}")
+
+    if Config.wandb_enabled and wandb is not None and wandb.run is not None:
+        wandb.finish()
 
 if __name__ == "__main__":
     main()
