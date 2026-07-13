@@ -50,6 +50,7 @@ class Trainer:
         return out
 
     def train(self):
+        global_step_offset = getattr(Config, '_bigram_steps', 2000)
         for iter in range(Config.max_iters):
             lr = self.get_lr(iter)
             for param_group in self.optimizer.param_groups:
@@ -76,8 +77,8 @@ class Trainer:
                         "train/perplexity": train_ppl,
                         "val/perplexity": val_ppl,
                         "lr": lr,
-                        "step": iter,
-                    })
+                        "gpt/iter": iter,
+                    }, step=global_step_offset + iter)
 
                 save_path = Config.model_save_path.format(self.model_name, iter)
                 safe_config = {k: v for k, v in Config.__dict__.items()
@@ -123,8 +124,9 @@ class Trainer:
                     wandb.log({
                         "bigram/val_loss": val_loss.item(),
                         "bigram/perplexity": ppl,
-                        "bigram/step": iter,
-                    })
+                        "bigram/iter": iter,
+                    }, step=iter)
+                    Config._bigram_steps = iter + 1
 
         save_path = Config.bigram_save_path
         torch.save({

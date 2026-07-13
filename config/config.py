@@ -61,3 +61,6 @@ class Config:
     model_save_path = "./outputs/model_{}_{}.pth"
     bigram_save_path = "./outputs/bigram_baseline.pth"
     results_path = "./outputs/results.txt"
+
+    # === Internal (set at runtime) ===
+    _bigram_steps = 0
