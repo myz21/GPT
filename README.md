@@ -72,6 +72,39 @@ Set mode in `config/config.py`: `mode = "medium"`
 | GPT    | ~1.5     | ~4.5       | ~4.8M      |
 ```
 
+## Sample Outputs
+
+The 3 best generations from GPT-Large (`val_loss=1.1053, ppl=3.02`). The model captures topic-related keywords and the `Başlık:` / `İçerik:` format.
+
+**#1 — İŞKUR (Employment)**
+```
+Prompt:  Başlık: Beş günden fazla hastalananlar İŞKUR programından çıkartılacak
+Output:  Başlık: Beş günden fazla hastalananlar İŞKUR programından çıkartılacak 360878 ekonomi
+         İçerik: İş İmkanları AĞIR programında beş günde emeklilik maaşı ile iş
+         işletmelerinin tamamını kabul edecek. İşte 2023 Beş Gündemin 100 Gündeminde
+         beklediği tarihi ise bu hastanelere göre bugün hangi durum hedef almadan
+         çıkartmalarını sürdürdük.
+```
+
+**#2 — ATO Başkanı (Tourism)**
+```
+Prompt:  Başlık: ATO Başkanı Baran, Kültür ve Turizm Bakanı Ersoy'u ziyaret etti
+Output:  Başlık: ATO Başkanı Baran, Kültür ve Turizm Bakanı Ersoy'u ziyaret etti
+         Ato'da sorusuna karar verdi. Şirketin bu sayı ne zaman saat kaçta bir
+         hafta içinde gelen ülkeden yargı yapan ersoy, sayısı 3 milyar dolara çıkan
+         Fatma İstanbul Cumhurbaşkanı Ersoy.
+```
+
+**#3 — Dünyanın En Mutlu Mesleği (Happiest Job)**
+```
+Prompt:  Başlık: Dünyanın en mutlu mesleği açıklandı
+Output:  Başlık: Dünyanın en mutlu mesleği açıklandı 3487789 ekonomi
+         İçerik: Dünyanın en mutlu mesleği açıklandı Bursa Mesleği tarafından önemli
+         bir baskı yapıldı. Dünyanın en düşük en mutlu mesleği, yurt dışındaki devlet
+         yetkileri ile birlikte baskı ve yıllık en mutlu aylık dönemleri tamamlanmış
+         olan süreç aylık baskılarına aykırı düzenleme sürenin.
+```
+
 ## Dataset: Havadis Turkish News Corpus
 
 - **Source:** [Havadis](https://huggingface.co/datasets/turkish-nlp-suite/Havadis) on HuggingFace
