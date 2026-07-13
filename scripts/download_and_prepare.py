@@ -47,6 +47,8 @@ def download_and_prepare(small=False, max_articles=None):
             title = slug.replace("-", " ")
 
             text_clean = raw_text.replace("\r", "")
+            from src.data import clean_text
+            text_clean = clean_text(text_clean)
 
             f.write(f"Başlık: {title}\n")
             f.write(f"İçerik: {text_clean}\n")
