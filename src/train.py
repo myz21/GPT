@@ -80,9 +80,11 @@ class Trainer:
                     })
 
                 save_path = Config.model_save_path.format(self.model_name, iter)
+                safe_config = {k: v for k, v in Config.__dict__.items()
+                               if not k.startswith('_') and not callable(v)}
                 torch.save({
                     'model_state_dict': self.model.state_dict(),
-                    'config': Config.__dict__,
+                    'config': safe_config,
                     'iter': iter,
                     'val_loss': losses['val'],
                     'train_loss': losses['train'],
